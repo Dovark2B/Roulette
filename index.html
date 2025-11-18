@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medieval Roulette</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Georgia', serif;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .wheel-background {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            top: -10%;
+            left: -10%;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .wheel-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .wheel-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #d4af37;
+            background: radial-gradient(circle, #3d2817 0%, #1a0f0a 100%);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), inset 0 0 30px rgba(0, 0, 0, 0.8);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .item-display {
+            font-size: 120px;
+            z-index: 2;
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        .result-text {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #d4af37;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel-container">
+        <div class="wheel-background"></div>
+        <div class="wheel-circle">
+            <div class="item-display" id="itemDisplay">🎪</div>
+        </div>
+        <div class="result-text" id="resultText"></div>
+    </div>
+
+    <script>
+        const DEFAULT_CONFIG = {
+            items: [
+                { image: '' },
+                { image: '' },
+                { image: '' },
+                { image: '' }
+            ],
+            resultSound: ''
+        };
+
+        let currentIndex = 0;
+        let isSpinning = false;
+        let items = [];
+
+        // Charger la config
+        function loadConfig() {
+            const saved = localStorage.getItem('rouletteSettings');
+            const config = saved ? JSON.parse(saved) : DEFAULT_CONFIG;
+            items = config.items || DEFAULT_CONFIG.items;
+            if (config.resultSound) {
+                DEFAULT_CONFIG.resultSound = config.resultSound;
+            }
+        }
+
+        // Afficher un item avec animation
+        function displayItem(index) {
+            const display = document.getElementById('itemDisplay');
+            const item = items[index];
+            
+            if (item && item.image) {
+                display.innerHTML = `<img src="${item.image}" style="width: 100%; height: 100%; object-fit: contain;">`;
+            } else {
+                display.textContent = '?';
+            }
+            
+            display.style.animation = 'none';
+            setTimeout(() => {
+                display.style.animation = 'bounce 0.6s ease-in-out';
+            }, 10);
+        }
+
+        // Lancer la roulette
+        function spin(itemCount) {
+            if (isSpinning || items.length === 0) return;
+            
+            isSpinning = true;
+            currentIndex = 0;
+            
+            const spinSpeed = 100;
+            const spinDuration = 3000;
+            const spinInterval = setInterval(() => {
+                displayItem(currentIndex);
+                currentIndex = (currentIndex + 1) % items.length;
+            }, spinSpeed);
+
+            setTimeout(() => {
+                clearInterval(spinInterval);
+                
+                // Choisir un item aléatoire
+                const finalIndex = Math.floor(Math.random() * items.length);
+                currentIndex = finalIndex;
+                displayItem(finalIndex);
+                
+                // Afficher le résultat
+                document.getElementById('resultText').textContent = `Résultat: #${finalIndex + 1}`;
+                
+                // Jouer le son si configuré
+                if (DEFAULT_CONFIG.resultSound) {
+                    try {
+                        const audio = new Audio();
+                        audio.src = DEFAULT_CONFIG.resultSound;
+                        audio.oncanplaythrough = () => {
+                            audio.play().catch(() => {});
+                        };
+                        // Timeout de sécurité si le son ne charge pas
+                        setTimeout(() => {
+                            if (audio.paused) audio.play().catch(() => {});
+                        }, 100);
+                    } catch (err) {
+                        console.log('Erreur audio:', err);
+                    }
+                }
+                
+                isSpinning = false;
+            }, spinDuration);
+        }
+
+        // Listener Streamer.bot
+        function setupStreambotListener() {
+            // Charger le client Streamer.bot
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@streamerbot/client@latest/dist/client.js';
+            script.onload = () => {
+                if (typeof StreamerbotClient !== 'undefined') {
+                    const client = new StreamerbotClient({
+                        host: 'localhost',
+                        port: 8080,
+                        endpoint: '/',
+                        immediate: false
+                    });
+
+                    client.on('Custom.Roulette:Spin', (data) => {
+                        spin(items.length);
+                    });
+
+                    client.connect();
+                }
+            };
+            document.head.appendChild(script);
+        }
+
+        // Initialisation
+        loadConfig();
+        displayItem(0);
+        setupStreambotListener();
+    </script>
+</body>
+</html>

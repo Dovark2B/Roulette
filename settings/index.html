@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medieval Roulette - Paramètres</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0f0a 0%, #3d2817 100%);
+            font-family: 'Georgia', serif;
+            color: #d4af37;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .settings-card {
+            background: rgba(61, 40, 23, 0.8);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .settings-card h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .item-entry {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .item-preview {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .item-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .item-input {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-input label {
+            font-size: 0.9em;
+            color: #b8860b;
+        }
+
+        .item-input input {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .item-input input::placeholder {
+            color: rgba(212, 175, 55, 0.5);
+        }
+
+        .item-input input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-remove {
+            padding: 10px 15px;
+            background: #8b0000;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .btn-remove:hover {
+            background: #b00000;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .sound-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sound-input {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .sound-input input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .sound-input input::placeholder {
+            color: rgba(212, 175, 55, 0.5);
+        }
+
+        .sound-input input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-play-sound {
+            padding: 10px 20px;
+            background: #2d6a4f;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-play-sound:hover {
+            background: #40916c;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-add {
+            padding: 12px 25px;
+            background: #2d6a4f;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn-add:hover {
+            background: #40916c;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            transform: scale(1.05);
+        }
+
+        .preview-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .preview-label {
+            font-size: 0.9em;
+            color: #b8860b;
+            margin-bottom: 10px;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            flex: 1;
+        }
+
+        .preview-item {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            justify-content: center;
+        }
+
+        .btn-save {
+            padding: 12px 30px;
+            background: #2d5a3d;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #3d7a4d;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-back {
+            padding: 12px 30px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-back:hover {
+            background: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .status-message.success {
+            background: rgba(45, 106, 79, 0.5);
+            border: 1px solid #40916c;
+            color: #90ee90;
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(139, 0, 0, 0.5);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>⚔️ Paramètres de la Roulette ⚔️</h1>
+        <div id="statusMessage" class="status-message"></div>
+        <!-- Section Items -->
+        <div class="settings-card">
+            <h2>📷 Images des Items</h2>
+            <div class="items-list" id="itemsList"></div>
+            <button class="btn-add" onclick="addItem()">+ Ajouter un item</button>
+        </div>
+        <!-- Section Son -->
+        <div class="settings-card">
+            <h2>🔊 Son de Fin</h2>
+            <div class="sound-section">
+                <label for="soundInput" class="preview-label">Son local (ex: win.mp3)</label>
+                <div class="sound-input">
+                    <input type="file" accept="audio/*" id="soundInputFile" onchange="handleSoundUpload(event)">
+                </div>
+                <button class="btn-play-sound" onclick="testSound()">🔊 Tester le son</button>
+            </div>
+        </div>
+
+        <!-- Aperçu -->
+        <div class="settings-card">
+            <h2>👁️ Aperçu</h2>
+            <div class="preview-section">
+                <div>
+                    <div class="preview-label">Items configurés:</div>
+                    <div class="preview-grid" id="previewGrid"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn-save" onclick="saveSettings()">💾 Sauvegarder</button>
+
+        </div>
+    </div>
+    <script>
+        const DEFAULT_CONFIG = {
+            items: [
+                { image: '' },
+                { image: '' },
+                { image: '' },
+                { image: '' }
+            ],
+            resultSound: ''
+        };
+
+        let config = { ...DEFAULT_CONFIG };
+
+        // À l'initialisation, reset le champ file mais garde le localStorage !
+        function loadConfig() {
+            const saved = localStorage.getItem('rouletteSettings');
+            if (saved) {
+                config = JSON.parse(saved);
+            }
+            renderItems();
+            updatePreview();
+            // Laisser l'input file vide : l'utilisateur doit recharger si besoin.
+        }
+
+        // Afficher les items
+        function renderItems() {
+            const list = document.getElementById('itemsList');
+            list.innerHTML = '';
+
+            config.items.forEach((item, index) => {
+                const entry = document.createElement('div');
+                entry.className = 'item-entry';
+                entry.innerHTML = `
+                    <div class="item-preview">
+                        ${item.image ? `<img src="${item.image}" alt="Item ${index + 1}" onerror="this.parentElement.textContent='❌'">` : '❌'}
+                    </div>
+                    <div class="item-input">
+                        <label>Item ${index + 1}</label>
+                        <input 
+                            type="file" 
+                            accept="image/*"
+                            onchange="handleFileUpload(event, ${index})"
+                        >
+                    </div>
+                    <button class="btn-remove" onclick="removeItem(${index})">✕</button>
+                `;
+                list.appendChild(entry);
+            });
+        }
+
+        // Fichier image -> base64
+        function handleFileUpload(event, index) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    config.items[index].image = e.target.result;
+                    renderItems();
+                    updatePreview();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Ajouter/supprimer item
+        function addItem() {
+            config.items.push({ image: '' });
+            renderItems();
+        }
+        function removeItem(index) {
+            if (config.items.length > 1) {
+                config.items.splice(index, 1);
+                renderItems();
+                updatePreview();
+            } else {
+                showStatus('Il faut au moins 1 item!', 'error');
+            }
+        }
+
+        // Aperçu
+        function updatePreview() {
+            const grid = document.getElementById('previewGrid');
+            grid.innerHTML = '';
+            config.items.forEach((item, index) => {
+                const preview = document.createElement('div');
+                preview.className = 'preview-item';
+                if (item.image) {
+                    preview.innerHTML = `<img src="${item.image}" alt="Item ${index + 1}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23d4af37%22 font-size=%2230%22%3E❌%3C/text%3E%3C/svg%3E'">`;
+                } else {
+                    preview.textContent = '❌';
+                }
+                grid.appendChild(preview);
+            });
+        }
+
+        // Gestion upload du son (data URI)
+        function handleSoundUpload(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    config.resultSound = e.target.result;  // Déjà en base64 ✅
+                    showStatus('Son chargé!', 'success');
+                    testSound();  // Test immédiatement après le chargement
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Test du son depuis data URI
+        function testSound() {
+            const soundData = config.resultSound;
+            if (!soundData) {
+                showStatus('Aucun son sélectionné', 'error');
+                return;
+            }
+            try {
+                const audio = new Audio();
+                audio.src = soundData;  // Assignez avant de jouer
+                audio.play().catch(err => {
+                    showStatus('Impossible de lire le son: ' + err.message, 'error');
+                });
+            } catch (err) {
+                showStatus('Erreur audio: ' + err.message, 'error');
+            }
+        }
+
+        // Sauvegarder
+        function saveSettings() {
+            
+            if (config.items.length === 0) {
+                showStatus('Ajoutez au moins 1 item!', 'error');
+                return;
+            }
+            localStorage.setItem('rouletteSettings', JSON.stringify(config));
+            showStatus('✅ Paramètres sauvegardés avec succès!', 'success');
+        }
+
+        // Message d'info
+        function showStatus(message, type) {
+            const el = document.getElementById('statusMessage');
+            el.textContent = message;
+            el.className = `status-message ${type}`;
+            setTimeout(() => {
+                el.className = 'status-message';
+            }, 3000);
+        }
+
+        // Initialisation
+        loadConfig();
+    </script>
+</body>
+
+</html>
