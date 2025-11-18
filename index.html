@@ -96,6 +96,9 @@
         <div class="result-text" id="resultText"></div>
     </div>
 
+    <!-- Import du SDK Streamer.bot -->
+    <script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
+
     <script>
         const DEFAULT_CONFIG = {
             items: [
@@ -155,26 +158,17 @@
             setTimeout(() => {
                 clearInterval(spinInterval);
                 
-                // Choisir un item aléatoire
                 const finalIndex = Math.floor(Math.random() * items.length);
                 currentIndex = finalIndex;
                 displayItem(finalIndex);
                 
-                // Afficher le résultat
                 document.getElementById('resultText').textContent = `Résultat: #${finalIndex + 1}`;
                 
-                // Jouer le son si configuré
                 if (DEFAULT_CONFIG.resultSound) {
                     try {
                         const audio = new Audio();
                         audio.src = DEFAULT_CONFIG.resultSound;
-                        audio.oncanplaythrough = () => {
-                            audio.play().catch(() => {});
-                        };
-                        // Timeout de sécurité si le son ne charge pas
-                        setTimeout(() => {
-                            if (audio.paused) audio.play().catch(() => {});
-                        }, 100);
+                        audio.play().catch(() => {});
                     } catch (err) {
                         console.log('Erreur audio:', err);
                     }
@@ -184,34 +178,48 @@
             }, spinDuration);
         }
 
-        // Listener Streamer.bot
-        function setupStreambotListener() {
-            // Charger le client Streamer.bot
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/@streamerbot/client@latest/dist/client.js';
-            script.onload = () => {
-                if (typeof StreamerbotClient !== 'undefined') {
-                    const client = new StreamerbotClient({
-                        host: 'localhost',
-                        port: 8080,
-                        endpoint: '/',
-                        immediate: false
-                    });
+        // Initialiser le client Streamer.bot
+        function setupStreambotClient() {
+            try {
+                const sbServerAddress = 'localhost';
+                const sbServerPort = 8080;
 
-                    client.on('Custom.Roulette:Spin', (data) => {
+                const client = new StreamerbotClient({
+                    host: sbServerAddress,
+                    port: sbServerPort,
+                    onConnect: () => {
+                        console.log(`✨ Connecté à Streamer.bot ${sbServerAddress}:${sbServerPort}`);
+                    },
+                    onDisconnect: () => {
+                        console.log("❌ Déconnecté de Streamer.bot");
+                    }
+                });
+
+                // Écouter les Raw.Action
+                client.on('Raw.Action', (response) => {
+                    const args = response.data?.arguments;
+                    if (!args) return;
+
+                    console.log('Trigger:', args.triggerName, 'Catégorie:', args.triggerCategory);
+
+                    // CUSTOM ROULETTE
+                    if (args.triggerName === 'Reward Redemption' && args.triggerCategory === 'Twitch/Channel Reward') {
+                        console.log('✅ Spin demandé via Custom Action!');
                         spin(items.length);
-                    });
-
-                    client.connect();
-                }
-            };
-            document.head.appendChild(script);
+                        return;
+                    }
+                   
+                });
+                
+            } catch (err) {
+                console.error('❌ Erreur connexion Streamer.bot:', err);
+            }
         }
 
         // Initialisation
         loadConfig();
         displayItem(0);
-        setupStreambotListener();
+        setupStreambotClient();
     </script>
 </body>
 </html>
