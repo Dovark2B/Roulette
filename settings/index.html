@@ -19,6 +19,11 @@
 
         <section class="panel">
             <h2 class="panel__title">Images</h2>
+            <div class="row" style="margin-bottom: 20px;">
+                <button id="btnRemoteSpin" class="btn btn--primary" style="width: 100%; background: var(--accent2);">
+                    LANCER LE SPIN (TEST)
+                </button>
+            </div>
 
             <div class="row">
                 <input id="fileInput" type="file" accept="image/*" multiple />
@@ -38,11 +43,11 @@
             </div>
 
             <div id="grid" class="grid"></div>
-        
+
 
 
             <div id="status" class="status" aria-live="polite"></div>
-        
+
     </main>
 
     <script src="../js/storage.js"></script>

@@ -46,7 +46,7 @@ body{
   background:
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.25), transparent 40%),
     radial-gradient(circle at 70% 75%, rgba(167,139,250,.20), transparent 42%),
-    radial-gradient(circle, rgba(255,255,255,.12), rgba(255,255,255,.06) 55%, rgba(255,255,255,.10) 100%);
+    radial-gradient(circle, rgba(255,255,255,.12), rgb(255, 170, 12) 55%, rgb(255, 208, 54) 100%);
   border: 3px solid var(--ring);
 }
 
@@ -54,8 +54,8 @@ body{
   position: absolute;
   inset: 22px;
   border-radius: 999px;
-  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, .10), transparent 40%),
-              radial-gradient(circle, rgba(0, 0, 0, .55), rgba(0, 0, 0, .35));
+  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0), transparent 0%),
+              radial-gradient(circle, rgb(0, 0, 0), rgb(163, 98, 0));
   overflow: hidden;
 }
 

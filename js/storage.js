@@ -50,9 +50,18 @@ function estimateLocalStorageBytes() {
   return total;
 }
 
+function triggerSpinSignal() {
+  const signal = {
+    timestamp: Date.now(),
+    source: 'settings_manual'
+  };
+  localStorage.setItem('mk_roulette_spin_signal', JSON.stringify(signal));
+}
+
 window.MKR = {
   STORAGE_KEY,
   loadConfig,
   saveConfig,
-  estimateLocalStorageBytes
+  estimateLocalStorageBytes,
+  triggerSpinSignal
 };
