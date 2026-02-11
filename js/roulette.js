@@ -106,7 +106,7 @@
             g.style.opacity = '0';
 
             // On supprime après
-            setTimeout(() => g.remove(), 200);
+            setTimeout(() => g.remove(), 800);
         });
 
 

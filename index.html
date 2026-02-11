@@ -8,13 +8,16 @@
 </head>
 <body>
   <main class="stage">
-    <div class="roulette" id="roulette" aria-label="Roulette">
-      <div class="roulette__ring"></div>
-      <div class="roulette__window" id="rouletteWindow">
+      <div class="custom-roulette">
+            <img src="./assets/ParcheminFond.png" class="layer-back" alt="Background" onerror="this.style.display='none'"/>
+
+
+      <div class="layer-spin" id="rouletteWindow">
         <div id="emptyState" class="roulette__empty" hidden>
           Aucune image configurée (ouvre /settings)
         </div>
       </div>
+        <img src="./assets/CadreRoulette.png" class="layer-front" alt="Frame" onerror="this.style.display='none'"/>
       <div class="roulette__shine"></div>
     </div>
 
